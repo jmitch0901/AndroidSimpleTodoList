@@ -88,6 +88,14 @@ public class ListFragment extends Fragment implements View.OnClickListener,
         this.adapter.notifyDataSetChanged();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.adapter.notifyDataSetChanged();
+    }
+
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         TodoItem todoItem = todoStore.getTodoItems().get(i);
@@ -98,12 +106,6 @@ public class ListFragment extends Fragment implements View.OnClickListener,
         intent.putExtras(b);
 
         startActivity(intent);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        this.adapter.notifyDataSetChanged();
     }
 
     @Override
