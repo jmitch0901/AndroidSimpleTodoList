@@ -1,5 +1,6 @@
 package com.example.jonathanmitchell.todolist.Fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -35,12 +36,29 @@ public class ListFragment extends Fragment implements View.OnClickListener,
 
     private TodoStore todoStore;
 
+    private ListCallbacks callbacks;
+
     public ListFragment() {
     }
+
 
     public static ListFragment newInstance() {
         ListFragment frag = new ListFragment();
         return frag;
+    }
+
+    public interface ListCallbacks {
+        void onListItemSelected(TodoItem item);
+    }
+
+    public void setListCallbacks(ListCallbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.callbacks = null;
     }
 
     @Nullable
@@ -99,18 +117,14 @@ public class ListFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         TodoItem todoItem = todoStore.getTodoItems().get(i);
-        Intent intent = new Intent(getActivity(), TodoDetailsActivity.class);
 
-        Bundle b = new Bundle();
-        b.putString(TodoDetailsFragment.XTRA_TODO_ITEM, todoItem.toJSON().toString());
-        intent.putExtras(b);
-
-        startActivity(intent);
+        if(this.callbacks != null){
+            this.callbacks.onListItemSelected(todoItem);
+        }
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-        TodoItem todoItem = todoStore.getTodoItems().get(i);
         return false;
     }
 }

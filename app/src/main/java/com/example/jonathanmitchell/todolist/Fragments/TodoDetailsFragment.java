@@ -44,11 +44,21 @@ public class TodoDetailsFragment extends Fragment {
 
     private Bundle savedState;
 
+    private Callbacks callbacks;
+
 
     public static TodoDetailsFragment newInstance(Bundle b) {
         TodoDetailsFragment frag = new TodoDetailsFragment();
         frag.setArguments(b);
         return frag;
+    }
+
+    public void setCallbacks(Callbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
+    public interface Callbacks {
+        void onItemSaved();
     }
 
     public TodoDetailsFragment() {
@@ -88,7 +98,9 @@ public class TodoDetailsFragment extends Fragment {
                 todoItem.setTodoDetailsText(detailsEditText.getText().toString());
                 TodoStore.get(getActivity()).update(todoItem);
                 Toast.makeText(getActivity(),"Updated Todo Item!", Toast.LENGTH_LONG).show();
-                getActivity().onBackPressed();
+                if(callbacks != null) {
+                    callbacks.onItemSaved();
+                }
             }
         });
 
